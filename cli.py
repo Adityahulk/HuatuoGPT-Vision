@@ -359,6 +359,7 @@ if __name__ =="__main__":
 
     parser.add_argument('--model_dir', default='', type=str)
     parser.add_argument('--device', default='cuda:0', type=str)
+    parser.add_argument('--image_file', default=None, type=str)
     args = parser.parse_args()
 
     bot = HuatuoChatbot(args.model_dir, args.device)
@@ -368,16 +369,8 @@ if __name__ =="__main__":
     # print(bot.inference('hi'))
 
     while True:
-        images = input('images, split by ",": ')
-        images = [i.strip() for i in images.split(',') if len(i.strip()) > 1 ]
-        text = input('USER ("clear" to clear history, "q" to exit): ')
-        if text.lower() in ['q', 'quit']:
-            exit()
-
-        if text.lower() == 'clear':
-            bot.history = []
-            bot.images = []
-            continue
+        images = [args.image_file]
+        text = "Based on the given medical imaging procedure, do an in-depth analysis and give complete information regarding the analysis"
 
         answer = bot.chat(images=images, text=text)
 
