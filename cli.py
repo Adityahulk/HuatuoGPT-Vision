@@ -1,9 +1,5 @@
 import sys
 import os
-file_path = os.path.abspath(__file__)
-dir_path = os.path.dirname(file_path)
-print(dir_path)
-sys.path.insert(0, dir_path)
 from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 from llava.model import *
 
@@ -36,7 +32,11 @@ class HuatuoChatbot():
     def init_components(self):
         
         d = self.model_dir
+
+        print('self.model_dir-----', self.model_dir)
+        
         if 'huatuogpt-vision-7b' in d.lower():
+            print('here----huatuogpt-vision-7b')
             print(f'loading from {self.model_dir}')
             from llava.model.language_model.llava_qwen2 import LlavaQwen2ForCausalLM
             model, loading_info = LlavaQwen2ForCausalLM.from_pretrained(self.model_dir, init_vision_encoder_from_ckpt=True, output_loading_info=True, torch_dtype=torch.bfloat16)
@@ -354,8 +354,13 @@ class HuatuoChatbot():
 
 if __name__ =="__main__":
 
+    #print('here under CLI--------')
+
     import argparse
     parser = argparse.ArgumentParser(description='Args of Data Preprocess')
+
+
+    #print('here under CLI--------')
 
     parser.add_argument('--model_dir', default='', type=str)
     parser.add_argument('--device', default='cuda:0', type=str)
@@ -364,18 +369,15 @@ if __name__ =="__main__":
 
     bot = HuatuoChatbot(args.model_dir, args.device)
 
-    # test
-    # print(bot.inference('what show in this picture?',['./output.png']))
-    # print(bot.inference('hi'))
+    #print('args.image_file------', args.image_file)
 
-    while True:
-        images = [args.image_file]
-        text = "Based on the given medical imaging procedure, do an in-depth analysis and give complete information regarding the analysis"
+    
+    images = [args.image_file]
+    text = "Based on the given medical imaging procedure, do an in-depth analysis and give complete information regarding the analysis"
 
-        answer = bot.chat(images=images, text=text)
+    answer = bot.chat(images=images, text=text)
 
-        images = None # already in the history
 
-        print()
-        print(f'GPT: {answer}')
-        print()
+    print()
+    print(f'GPT: {answer}')
+    print()
